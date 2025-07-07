@@ -172,7 +172,7 @@ function manageImages(discrepancyId, pictures) {
                       index + 1
                     }" 
                              onclick="showFullscreenImage('/uploads/${picture}')"
-                             onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\" viewBox=\"0 0 200 200\"><rect width=\"200\" height=\"200\" fill=\"%23f8f9fa\"/><text x=\"100\" y=\"100\" text-anchor=\"middle\" font-family=\"Arial\" font-size=\"14\" fill=\"%236c757d\">Image not found</text></svg>'">
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\" viewBox=\"0 0 200 200\"><rect width=\"200\" height=\"200\" fill=\"%23f8f9fa\"/><text x=\"100\" y=\"100\" text-anchor=\"middle\" font-family=\"Arial\" font-size=\"14\" fill=\"%236c757d\"></text></svg>>
                         <button class="delete-image-btn" onclick="deleteImage('${discrepancyId}', '${picture}', this)" title="Delete this image">
                             ×
                         </button>
