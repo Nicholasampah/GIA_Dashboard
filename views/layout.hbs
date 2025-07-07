@@ -1,0 +1,56 @@
+<!-- views/layout.hbs - Main Layout Template -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - THG FULFIL Warehouse</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">INV</div>
+                <div class="logo-text">THG FULFIL INVENTORY</div>
+            </div>
+            <div class="header-actions">
+                <button class="notification-icon refresh-btn" onclick="refreshData()" title="Refresh data">🔄</button>
+                <div class="notification-icon">🔔</div>
+                <div class="notification-icon">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {{{body}}}
+    </main>
+
+    <!-- Success/Error Messages -->
+    {{#if success}}
+    <div class="notification success" id="notification">
+        ✅ {{success}}
+    </div>
+    {{/if}}
+
+    {{#if error}}
+    <div class="notification error" id="notification">
+        ⚠️ {{error}}
+    </div>
+    {{/if}}
+
+    <script src="/js/main.js"></script>
+    <script src="/js/images.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+

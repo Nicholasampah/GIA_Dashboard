@@ -1,0 +1,171 @@
+<!-- views/delivery-details.hbs - Delivery Details Page -->
+<div class="container">
+    <div class="page-title">
+        <h1>Delivery Details</h1>
+        <div class="breadcrumb">
+            <a href="/">Dashboard</a> / <a href="/">Deliveries</a> / Delivery {{delivery.giaNumber}}
+        </div>
+    </div>
+
+    <!-- Delivery Header Information -->
+    <div class="delivery-header">
+        <h2>
+            <div class="status-indicator {{#if (eq delivery.status "Reported")}}{{else}}pending{{/if}}"></div>
+            Delivery Information
+        </h2>
+        
+        <div class="header-grid">
+            <div class="header-field">
+                <div class="field-label">GIA Number</div>
+                <div class="field-value highlight">{{delivery.giaNumber}}</div>
+            </div>
+            
+            <div class="header-field">
+                <div class="field-label">Delivery ID</div>
+                <div class="field-value">{{delivery.deliveryId}}</div>
+            </div>
+            
+            <div class="header-field">
+                <div class="field-label">ASN Type</div>
+                <div class="field-value">{{delivery.asnType}}</div>
+            </div>
+            
+            <div class="header-field">
+                <div class="field-label">Supplier Name</div>
+                <div class="field-value">{{delivery.supplierName}}</div>
+            </div>
+            
+            <div class="header-field">
+                <div class="field-label">Division</div>
+                <div class="field-value">{{delivery.division}}</div>
+            </div>
+            
+            <div class="header-field">
+                <div class="field-label">Finished Date</div>
+                <div class="field-value">{{formatDateTime delivery.finishedDate}}</div>
+            </div>
+            
+            {{!-- <div class="header-field">
+                <div class="field-label">Inventory Admin</div>
+                <div class="field-value">{{delivery.auditorName}}</div>
+            </div> --}}
+
+     <div class="header-field">
+    <div class="field-label">Inventory Admin</div>
+    <div class="field-value editable-admin" data-delivery-id="{{delivery.giaNumber}}">
+        {{#if delivery.auditorName}}{{delivery.auditorName}}{{else}}<span class="empty-field">Click to add admin name</span>{{/if}}
+    </div>
+</div>
+
+            <div class="header-field">
+                <div class="field-label">Stock Owner</div>
+                <div class="field-value">{{delivery.stockOwner}}</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary" style="display: none;">
+                <span>✏️</span>
+                Update Delivery
+            </button>
+            <button class="btn btn-secondary" onclick="exportReport('{{delivery.giaNumber}}')">
+                <span>📊</span>
+                Export Report
+            </button>
+            <button class="btn btn-warning" onclick="requestRecount('{{delivery.giaNumber}}')">
+                <span>🔄</span>
+                Request Recount
+            </button>
+        </div>
+    </div>
+
+    <!-- Discrepancy Details Table -->
+    {{#if discrepancies}}
+    <div class="discrepancy-section">
+        <div class="section-header">
+            <h3>
+                📦 Product Discrepancies
+            </h3>
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <span class="stat-badge shortage">{{stats.shortages}}</span>
+                    <span>Shortages</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-badge overage">{{stats.overages}}</span>
+                    <span>Overages</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-badge damaged">{{stats.damaged}}</span>
+                    <span>Damaged</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Discrepancy Type</th>
+                        <th>Product ID</th>
+                        <th>Barcode</th>
+                        <th>Product Title</th>
+                        <th>Expected Qty</th>
+                        <th>Received Good</th>
+                        <th>Received Damaged</th>
+                        <th>Difference</th>
+                        <th>Admin Sign off</th>
+                        <th>Inventory Comments</th>
+                        <th>Status</th>
+                        <th>HQ Request</th>
+                        <th>HQ Comment</th>
+                        <th>Pictures</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each discrepancies}}
+                    <tr>
+                        <td><span class="discrepancy-type {{discrepancyClass type}}">{{type}}</span></td>
+                        <td><span class="product-id">{{productId}}</span></td>
+                        <td>{{barcode}}</td>
+                        <td>{{title}}</td>
+                        <td class="quantity">{{expectedQty}}</td>
+                        <td class="quantity">{{receivedGood}}</td>
+                        <td class="quantity">{{receivedDamaged}}</td>
+                        <td class="quantity {{#if (eq difference.charAt 0 '-')}}negative{{else}}{{#if (eq difference.charAt 0 '+')}}positive{{/if}}{{/if}}">{{difference}}</td>
+                        <td>{{formatDateTime signOffDate}}</td>
+                        <td class="comments-cell editable-comment" data-discrepancy-id="{{id}}">{{comments}}</td>
+                        <td><span class="status-cell editable-status"data-discrepancy-id="{{id}}">{{status}}</span></td>
+                        <td class="editable-hq-request" data-discrepancy-id="{{id}}">{{hqRequest}}</td>
+                        <td class="comments-cell editable-hq-comment" data-discrepancy-id="{{id}}">{{hqComment}}</td>
+                        <td class="media-cell">
+                          {{#if pictures.length}}
+                            <div class="image-gallery">
+                                <span class="upload-count">✅ {{pictures.length}} files</span>
+                                <div class="image-actions">
+                                    <button class="view-images-btn" onclick="viewImages('{{id}}', {{json pictures}})">👁️ View</button>
+                                    <button class="add-images-btn" onclick="addMoreImages('{{id}}')">➕ Add</button>
+                                    <button class="manage-images-btn" onclick="manageImages('{{id}}', {{json pictures}})">⚙️ Manage</button>
+                                </div>
+                            </div>
+                         {{else}}
+                            <button class="upload-btn" onclick="uploadImage('{{id}}')">📷 Upload</button>
+                         {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{else}}
+    <div class="discrepancy-section">
+        <div class="section-header">
+            <h3>📦 Product Discrepancies</h3>
+        </div>
+        <div style="padding: 2rem; text-align: center; color: #6c757d;">
+            No discrepancies reported for this delivery.
+        </div>
+    </div>
+    {{/if}}
+</div>

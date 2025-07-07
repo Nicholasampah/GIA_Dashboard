@@ -1,0 +1,154 @@
+<!-- views/dashboard.hbs - Main Dashboard -->
+<div class="container">
+    <div class="dashboard-title">
+        <h1>M2 Finished GIA Dashboard</h1>
+        <p>Discrepancy Reporting & Management System</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-number">{{stats.total}}</div>
+            <div class="stat-label">Total Deliveries</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number">{{stats.reported}}</div>
+            <div class="stat-label">Reported</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-number">{{stats.pending}}</div>
+            <div class="stat-label">Pending Reports</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-number">{{stats.completionRate}}%</div>
+            <div class="stat-label">Completion Rate</div>
+        </div>
+    </div>
+
+    <div class="controls-section">
+        <form method="GET" action="/" id="filterForm">
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" class="search-input" name="search" 
+                       placeholder="Search deliveries by GIA number, reference, division, or auditor..."
+                       value="{{filters.selected.search}}">
+            </div>
+            
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select" name="status">
+                        <option value="">All Status</option>
+                        <option value="Reported" {{#if (eq filters.selected.status "Reported")}}selected{{/if}}>Reported</option>
+                        <option value="Not Reported" {{#if (eq filters.selected.status "Not Reported")}}selected{{/if}}>Not Reported</option>
+                        <option value="Open" {{#if (eq filters.selected.status "Open")}}selected{{/if}}>Open</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Division</label>
+                    <select class="filter-select" name="division">
+                        <option value="">All Divisions</option>
+                        {{#each filters.divisions}}
+                        <option value="{{this}}" {{#if (eq this ../filters.selected.division)}}selected{{/if}}>{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Auditor</label>
+                    <select class="filter-select" name="auditor">
+                        <option value="">All Auditors</option>
+                        {{#each filters.auditors}}
+                        <option value="{{this}}" {{#if (eq this ../filters.selected.auditor)}}selected{{/if}}>{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                
+                <button type="button" class="add-button" onclick="window.location.href='/delivery/new'">
+                    <span>➕</span>
+                    Add New Delivery
+                </button>
+                
+                <button type="button" class="add-button" onclick="exportData()" style="background: linear-gradient(135deg, #74b9ff, #0984e3);">
+                    <span>📊</span>
+                    Export Data
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-section">
+        <div class="table-header">
+            <h3>Delivery Records ({{deliveries.length}} items)</h3>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">GIA NUMBER<br><span style="font-size: 0.7rem; color: #6c757d; text-transform: none; font-weight: 400;">DELIVERY ID</span></th>
+                        <th style="width: 20%;">DIVISION<br><span style="font-size: 0.7rem; color: #6c757d; text-transform: none; font-weight: 400;">STOCK OWNER</span></th>
+                        <th style="width: 12%;">FINISHED DATE</th>
+                        <th style="width: 15%;">STATUS</th>
+                        <th style="width: 15%;">AUDITOR</th>
+                        <th style="width: 10%;">DUE BY</th>
+                        {{!-- <th style="width: 13%;">ACTIONS</th> --}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each deliveries}}
+                    <tr onclick="window.location.href='/delivery/{{giaNumber}}'" style="cursor: pointer;" class="delivery-row">
+                        <td>
+                            <div class="delivery-details">
+                                <span class="gia-number"># {{giaNumber}}</span>
+                                <span class="delivery-meta">{{deliveryRef}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="delivery-details">
+                                <span class="delivery-title">{{division}}</span>
+                                <span class="delivery-meta">{{stockOwner}}</span>
+                            </div>
+                        </td>
+                        <td>{{formatDate finishedDate}}</td>
+                        <td>
+                            <span class="status-badge {{statusClass status}}">
+                                {{status}}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="technician-info">
+                                <span class="technician-name">{{auditorName}}</span>
+                                <span class="technician-role">Auditor</span>
+                            </div>
+                        </td>
+                        <td>-</td>
+                        {{!-- <td onclick="event.stopPropagation()">
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" onclick="window.location.href='/delivery/{{giaNumber}}/edit'">
+                                    Edit
+                                </button>
+                                {{#unless (eq status "Reported")}}
+                                <button class="action-btn report-btn" onclick="markAsReported('{{id}}', '{{giaNumber}}')">
+                                    Report
+                                </button>
+                                {{/unless}}
+                            </div>
+                        </td> --}}
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="7" class="no-results">
+                            <div class="no-results-icon">📋</div>
+                            <div>No deliveries found matching your criteria</div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

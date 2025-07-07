@@ -1,0 +1,15 @@
+<!-- views/error.hbs - General Error Page -->
+<div class="container">
+    <div class="error-page">
+        <div class="error-icon">⚠️</div>
+        <h1>{{title}}</h1>
+        <p>{{message}}</p>
+        {{#if error.stack}}
+        <details class="error-details">
+            <summary>Error Details</summary>
+            <pre>{{error.stack}}</pre>
+        </details>
+        {{/if}}
+        <a href="/" class="btn btn-primary">Return to Dashboard</a>
+    </div>
+</div>

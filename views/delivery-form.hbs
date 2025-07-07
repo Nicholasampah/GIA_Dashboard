@@ -1,0 +1,110 @@
+<!-- views/delivery-form.hbs - Create/Edit Delivery Form -->
+<div class="container">
+    <div class="page-title">
+        <h1>{{#if isEdit}}Edit Delivery{{else}}Create New Delivery{{/if}}</h1>
+        <div class="breadcrumb">
+            <a href="/">Dashboard</a> / {{#if isEdit}}Edit Delivery #{{delivery.giaNumber}}{{else}}New Delivery{{/if}}
+        </div>
+    </div>
+
+    <div class="form-container">
+        <form method="POST" action="{{#if isEdit}}/delivery/{{delivery.giaNumber}}/update{{else}}/delivery{{/if}}" class="delivery-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="giaNumber" class="form-label">GIA Number</label>
+                    <input type="text" id="giaNumber" name="giaNumber" class="form-input" 
+                           value="{{delivery.giaNumber}}" required readonly{{/if}}>
+                </div>
+
+                <div class="form-group">
+                    <label for="deliveryRef" class="form-label">Delivery Reference</label>
+                    <input type="text" id="deliveryRef" name="deliveryRef" class="form-input" 
+                           value="{{delivery.deliveryRef}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="deliveryId" class="form-label">Delivery ID</label>
+                    <input type="text" id="deliveryId" name="deliveryId" class="form-input" 
+                           value="{{delivery.deliveryId}}" required readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="asnType" class="form-label">ASN Type</label>
+                    <select id="asnType" name="asnType" class="form-select" required>
+                        <option value="">Select ASN Type</option>
+                        <option value="ASN_DEFAULT" {{#if (eq delivery.asnType "ASN_DEFAULT")}}selected{{/if}}>ASN Default</option>
+                        <option value="ASN_STANDARD" {{#if (eq delivery.asnType "ASN_STANDARD")}}selected{{/if}}>ASN Standard</option>
+                        <option value="ASN_EXPRESS" {{#if (eq delivery.asnType "ASN_EXPRESS")}}selected{{/if}}>ASN Express</option>
+                        <option value="ASN_BULK" {{#if (eq delivery.asnType "ASN_BULK")}}selected{{/if}}>ASN Bulk</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="supplierName" class="form-label">Supplier Name</label>
+                    <input type="text" id="supplierName" name="supplierName" class="form-input" 
+                           value="{{delivery.supplierName}}" required readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="division" class="form-label">Division</label>
+                    <select id="division" name="division" class="form-select" required >
+                        <option value="" readonly>Select Division</option>
+                        <option value="Core Beauty" {{#if (eq delivery.division "Core Beauty")}}selected{{/if}}>Core Beauty</option>
+                        <option value="Cult Beauty" {{#if (eq delivery.division "Cult Beauty")}}selected{{/if}}>Cult Beauty</option>
+                        <option value="Ingenuity" {{#if (eq delivery.division "Ingenuity")}}selected{{/if}}>Ingenuity</option>
+                        <option value="Luxury" {{#if (eq delivery.division "Luxury")}}selected{{/if}}>Luxury</option>
+                        <option value="Subscriptions" {{#if (eq delivery.division "Subscriptions")}}selected{{/if}}>Subscriptions</option>
+                        <option value="Beauty Brands" {{#if (eq delivery.division "Beauty Brands")}}selected{{/if}}>Beauty Brands</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="stockOwner" class="form-label">Stock Owner</label>
+                    <select id="stockOwner" name="stockOwner" class="form-select" required>
+                        <option value="" readonly>Select Stock Owner</option>
+                        <option value="THEHUT" {{#if (eq delivery.stockOwner "THEHUT")}}selected{{/if}}>THE HUT</option>
+                        <option value="HOLLANDBARRET" {{#if (eq delivery.stockOwner "HOLLANDBARRET")}}selected{{/if}}>HOLLAND & BARRETT</option>
+                        <option value="ALLBEAUTY" {{#if (eq delivery.stockOwner "ALLBEAUTY")}}selected{{/if}}>ALL BEAUTY</option>
+                        <option value="LUX" {{#if (eq delivery.stockOwner "LUX")}}selected{{/if}}>LUX</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="finishedDate" class="form-label">Finished Date</label>
+                    <input type="date" id="finishedDate" name="finishedDate" class="form-input" 
+                           value="{{formatDateInput delivery.finishedDate}}" required readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="auditorName" class="form-label">Inventory Admin</label>
+                    <input type="text" id="auditorName" name="auditorName" class="form-input" 
+                           value="{{delivery.auditorName}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="auditorName" class="form-label">Auditor Name</label>
+                    <input type="text" id="auditorName" name="auditorName" class="form-input" 
+                           value="{{delivery.auditorName}}">
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-select" required>
+                        <option value="Not Reported" {{#if (eq delivery.status "Not Reported")}}selected{{/if}}>Not Reported</option>
+                        <option value="Open" {{#if (eq delivery.status "Open")}}selected{{/if}}>Open</option>
+                        <option value="Reported" {{#if (eq delivery.status "Reported")}}selected{{/if}}>Reported</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    {{#if isEdit}}Update Delivery{{else}}Create Delivery{{/if}}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
