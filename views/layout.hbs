@@ -4,18 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - THG FULFIL Warehouse</title>
+    <title>{{title}}</title>
+      <!-- Preload critical resources -->
+    <link rel="preload" href="/css/themes.css" as="style">
+    <link rel="preload" href="/css/style2.css" as="style">
+    <link rel="preload" href="/js/theme-manager.js" as="script">
+
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/css/themes.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+        
+    <!-- Prevent flash of wrong theme -->
+    <script>
+        // Immediately apply saved theme to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('preferred-theme') || 'dark';
+            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const effectiveTheme = savedTheme === 'auto' ? (systemPrefersDark ? 'dark' : 'light') : savedTheme;
+            
+            if (effectiveTheme !== 'light') {
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+            }
+            
+            // Update meta theme color
+            const colors = { light: '#ffffff', dark: '#1a1a1a', 'high-contrast': '#000000' };
+            document.querySelector('meta[name="theme-color"]').content = colors[effectiveTheme] || colors.light;
+        })();
+    </script>
 </head>
 <body>
     <header class="header">
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">INV</div>
-                <div class="logo-text">THG FULFIL INVENTORY</div>
+                <div class="logo-text"><a href="/"> THG FULFIL INVENTORY</a></div>
             </div>
             <div class="header-actions">
                 <button class="notification-icon refresh-btn" onclick="refreshData()" title="Refresh data">🔄</button>
@@ -42,9 +70,26 @@
     </div>
     {{/if}}
 
+      <!-- JavaScript -->
+    <script src="/js/theme-manager.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/images.js"></script>
+    
+    <!-- Page-specific scripts -->
+    {{#if scripts}}
+        {{#each scripts}}
+            <script src="{{this}}"></script>
+        {{/each}}
+    {{/if}}
 
+    <!-- Initialize theme manager -->
+    <script>
+        // Additional theme-specific functionality can go here
+        document.addEventListener('themechange', function(e) {
+            console.log('Theme changed to:', e.detail.effectiveTheme);
+            
+        });
+    </script>
 </body>
 </html>
 
